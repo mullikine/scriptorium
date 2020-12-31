@@ -43,6 +43,9 @@
 #    - Print out FILE again after finishing each file so the following works nicely
 #      httpd-dump-config | grep -e FILE -e SSLCertificate
 #      Before, you might have seen a hit in conf.d/welcome.conf instead of httpd.conf
+#
+# 2020-12-31 Andy Castles <andy@andrewc.com>
+#    - Added support for 'IncludeOptional' keyword for including files
 
 use strict;
 use warnings;
@@ -125,9 +128,9 @@ sub process_file
                         $server_root = interpolate_environment_variables($1);
                 }
 
-                if (m/^\s*include\s+"?([^"\s]+)"?/i)
+                if (m/^\s*(includeoptional|include)\s+"?([^"\s]+)"?/i)
                 {
-                        my $glob_expression = interpolate_environment_variables($1);
+                        my $glob_expression = interpolate_environment_variables($2);
 
                         chdir $server_root;
 
